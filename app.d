@@ -8,7 +8,7 @@ import std.traits;
 struct _sysInfo {
 	string username;
 	int coreCount;
-	int ram;
+	ulong ram;
 	string arch;
 	string[string] storageDeviceSpace;
 	string[] users;
@@ -52,9 +52,9 @@ string[string] getStorageDevices()
 	return map;
 }
 
-int getRAM()
+ulong getRAM()
 {
-	return to!int(["awk '/MemTotal/ {print $2}' /proc/meminfo"].execute.output);
+	return to!ulong(strip("awk '/MemTotal/ {print $2}' /proc/meminfo".executeShell.output));
 }
 
 string getArch()
@@ -82,7 +82,8 @@ void main()
 	sysInfo.storageDeviceSpace = getStorageDevices();
 	sysInfo.users = getUsers();
 	sysInfo.homeDirectory = getHomeDirectory();
-
+	sysInfo.ram = getRAM();
+	sysInfo.ram /= 1048576;
 	foreach (member; __traits(allMembers, _sysInfo))
 	{
 		auto val = __traits(getMember, sysInfo, member);

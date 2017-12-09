@@ -23,17 +23,17 @@ string getHomeDirectory()
 
 int getCores()
 {
-	return to!int(strip(["nproc"].execute.output));
+	return to!int(strip("nproc".executeShell.output));
 }
 
 string getUsername()
 {
-	return strip(["whoami"].execute.output);
+	return strip("whoami".executeShell.output);
 }
 
 string[string] getStorageDevices()
 {
-	string[] devices = splitLines(["lsblk", "-l"].execute.output)[1 .. $];
+	string[] devices = splitLines("lsblk -l".executeShell.output)[1 .. $];
 	string[string] map;
 
 	foreach (el; devices)
@@ -59,12 +59,12 @@ ulong getRAM()
 
 string getArch()
 {
-	return strip(["uname", "-m"].execute.output);
+	return strip("uname -m".executeShell.output);
 }
 
 string[] getUsers()
 {
-	string[] unparsed = splitLines(["cat", "/etc/passwd"].execute.output);
+	string[] unparsed = splitLines("cat /etc/passwd".executeShell.output);
 	string[] users;
 
 	foreach (line; unparsed)

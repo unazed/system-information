@@ -8,7 +8,7 @@ import std.traits;
 struct _sysInfo {
 	string username;
 	int coreCount;
-	ulong ram;
+	string ram;
 	string arch;
 	string[string] storageDeviceSpace;
 	string[] users;
@@ -82,8 +82,10 @@ void main()
 	sysInfo.storageDeviceSpace = getStorageDevices();
 	sysInfo.users = getUsers();
 	sysInfo.homeDirectory = getHomeDirectory();
-	sysInfo.ram = getRAM();
-	sysInfo.ram /= 1048576;
+	ulong ram = getRAM();
+	ram /= 1048576;
+	sysInfo.ram = to!string(ram) ~ "GB";
+
 	foreach (member; __traits(allMembers, _sysInfo))
 	{
 		auto val = __traits(getMember, sysInfo, member);
